@@ -8,3 +8,32 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+html,
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0px;
+    height: 100%;
+    padding: 0px;
+    min-height: 100vh;
+}
+
+
+main {
+    flex: 1;
+    /* Permet au contenu principal de prendre toute la hauteur restante */
+}
+
+
+nav>ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    list-style: none;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+}

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Bio Bloom Market V1" %></title>
+    <title><%= content_for(:title) || "Bio Bloom Market V1" %>Bio Bloom</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -23,6 +22,16 @@
   </head>
 
   <body>
-    <%= yield %>
+  <nav>
+  <ul>
+    <li>Bio Bloom Market</li>
+    <li>Accueil</li>
+
+  </ul>
+</nav>
+<main>
+<%= yield %>
+</main>
+  <footer> <%= Date.current.year %> Bio Bloom Market</footer>
   </body>
 </html>
