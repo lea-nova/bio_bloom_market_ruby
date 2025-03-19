@@ -26,7 +26,12 @@
   <ul>
     <li><%= link_to "Bio Bloom Market", root_path %></li>
     <li><%= link_to "Accueil", root_path %></li>
+    <% if authenticated? %>
+    <%= button_too "Sign out", session_path, method: :delete %>
+    <% else %>
     <li><%= link_to "Se connecter", new_session_path %></li>
+    <% end %>
+    <li><%= link_to "S'inscrire", new_session_path %></li>
 
   </ul>
 </nav>

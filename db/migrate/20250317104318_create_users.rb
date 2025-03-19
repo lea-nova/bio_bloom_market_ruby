@@ -6,6 +6,8 @@ class CreateUsers < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
+    remove_column :users, :lastName
+    remove_column :users, :dateOfBirth
     add_index :users, :email_address, unique: true
   end
 end
