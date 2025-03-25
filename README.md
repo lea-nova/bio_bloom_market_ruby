@@ -1,4 +1,27 @@
 # README
+
+Lancer le serveur
+
+```
+bin/rails server 
+
+```
+
+Lancer la console 
+
+```
+
+bin/rails console
+
+```
+
+Build tailwind
+
+```
+
+bin/rails tailwindcss:build
+
+```
 Test
 
 This README would normally document whatever steps are necessary to get the
