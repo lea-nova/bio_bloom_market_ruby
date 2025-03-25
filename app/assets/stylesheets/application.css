@@ -8,6 +8,10 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+
+/* @import "tailwindcss"; */
+
 html,
 body {
     display: flex;
