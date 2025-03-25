@@ -19,14 +19,17 @@ class UsersController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+  
   def update
+  
   end
 
   def destroy
+  
   end
 
   private
   def user_params
-  params.require(:user).permit(:email_address ,:name, :last_name, :password, :password_confirmation, :date_of_birth)
+  params.require(:user).permit(:email_address, :name, :last_name, :password, :password_confirmation, :date_of_birth)
   end
 end
