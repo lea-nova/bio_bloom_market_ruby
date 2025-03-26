@@ -6,7 +6,10 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email_address, :password))
+    user = User.authenticate_by(params.permit(:email_address, :password))
+    if user
+      reset_session
+      session[:user_id] = user.id
       start_new_session_for user
       redirect_to after_authentication_url
     else
@@ -16,6 +19,6 @@ class SessionsController < ApplicationController
 
   def destroy
     terminate_session
-    redirect_to new_session_path
+    redirect_to root_path, notice: "Déconnecté avec succès"
   end
 end
