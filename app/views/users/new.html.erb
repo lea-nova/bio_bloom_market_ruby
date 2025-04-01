@@ -11,33 +11,5 @@
   </div>
 <% end %>
 
-  <%= form_with model: @user, :html => {:class => 'flex flex-col'}, local:true  do |form| %>
-    <span>
-      <%= form.label :email_address %>
-      <%= form.email_field :email_address %>
-    </span>
-    <span>
-      <%= form.label :name %>
-      <%= form.text_field :name %>  
-    </span>    
-    <span>
-      <%= form.label :last_name %>
-      <%= form.text_field :last_name %>  
-    </span>    
-    <span>
-      <%= form.label :password %>
-      <%= form.password_field :password %>
-    </span>
-    <span>
-      <%= form.label :password_confirmation %>
-      <%= form.password_field :password_confirmation %>
-    </span>
-    <span>
-    <%= form.label :date_of_birth %>
-    <%= form.date_field :date_of_birth %>
-    </span>
-    <%= form.submit "S'inscrire", class:"border border-2 rounded-lg cursor-pointer w-[10rem]" %>
-  <% end %>
-
-
+<%= render "form", user: @user %>
 </div>
