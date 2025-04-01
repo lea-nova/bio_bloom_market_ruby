@@ -18,7 +18,9 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag 'application', "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
   </head>
 
   <body>
@@ -28,7 +30,7 @@
     <li><%= link_to "Accueil", root_path %></li>
     <% if authenticated? %>
     <li><%= link_to "Mon profil", user_path(Current.user) %></li>
-    <%= button_to "Se déconnecter", session_path, method: :delete  %>
+    <%= button_to "Se déconnecter", session_path, method: :delete %>
     <% else %>
       <li><%= link_to "Se connecter", new_session_path %></li>
       <%= link_to "S'inscrire", new_user_path %>
@@ -45,5 +47,6 @@
 <%= yield %>
 </main>
   <footer> <%= Date.current.year %> Bio Bloom Market</footer>
+  <%= javascript_include_tag "turbo", type: "module" %>
   </body>
 </html>
