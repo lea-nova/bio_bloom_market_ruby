@@ -24,12 +24,24 @@
   <body>
   <nav>
   <ul>
-    <li>Bio Bloom Market</li>
-    <li>Accueil</li>
-
+    <li><%= link_to "Bio Bloom Market", root_path %></li>
+    <li><%= link_to "Accueil", root_path %></li>
+    <% if authenticated? %>
+    <li><%= link_to "Mon profil", user_path(Current.user) %></li>
+    <%= button_to "Se déconnecter", session_path, method: :delete  %>
+    <% else %>
+      <li><%= link_to "Se connecter", new_session_path %></li>
+      <%= link_to "S'inscrire", new_user_path %>
+    <% end %>
   </ul>
 </nav>
+<% if authenticated? %>
+  <span class="bg-green-200 w-[10rem] text-center">
+  <small>Bonjour, <b><%= Current.user.name %></b> !</small>
+  </span>
+<% end %>
 <main>
+<%= link_to 'Tous les utilisateurs', users_path if authenticated? %>
 <%= yield %>
 </main>
   <footer> <%= Date.current.year %> Bio Bloom Market</footer>

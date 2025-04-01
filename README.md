@@ -1,25 +1,24 @@
 # README
-Test
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Lancer le serveur
 
-Things you may want to cover:
+```
+bin/rails server 
 
-* Ruby version
+```
 
-* System dependencies
+Lancer la console 
 
-* Configuration
+```
 
-* Database creation
+bin/rails console
 
-* Database initialization
+```
 
-* How to run the test suite
+Build tailwind
 
-* Services (job queues, cache servers, search engines, etc.)
+```
 
-* Deployment instructions
+bin/rails tailwindcss:build
 
-* ...
+```
