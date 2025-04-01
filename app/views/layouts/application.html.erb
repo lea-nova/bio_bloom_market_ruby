@@ -27,9 +27,8 @@
     <li><%= link_to "Bio Bloom Market", root_path %></li>
     <li><%= link_to "Accueil", root_path %></li>
     <% if authenticated? %>
-      <%= form_with url: session_path(:id), method: :delete do %>
-        <%= submit_tag "Se déconnecter" %>
-      <% end %>
+    <li><%= link_to "Mon profil", user_path(Current.user) %></li>
+    <%= button_to "Se déconnecter", session_path, method: :delete  %>
     <% else %>
       <li><%= link_to "Se connecter", new_session_path %></li>
       <%= link_to "S'inscrire", new_user_path %>
@@ -42,6 +41,7 @@
   </span>
 <% end %>
 <main>
+<%= link_to 'Tous les utilisateurs', users_path if authenticated? %>
 <%= yield %>
 </main>
   <footer> <%= Date.current.year %> Bio Bloom Market</footer>
