@@ -5,4 +5,5 @@
 <%= link_to "Modifier mes informations personnelles", edit_user_path %>
 <%= link_to "Retour à l'accueil", root_path %>
 
-<%= button_to "Supprimer mon compte", user_path(Current.user), method: :delete  %>
+<%= button_to "Supprimer mon compte", user_path(Current.user), method: :delete, data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?"
+  }  %>
