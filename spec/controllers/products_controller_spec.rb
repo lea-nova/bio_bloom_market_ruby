@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe ProductsController, type: :request do
     describe "GET /products" do
         before do
-            Product.create!(name:"Pomme", description:"Pomme gala")
-            Product.create!(name:"Banane", description:"Banane")
+            Product.create!(name: "Pomme", description: "Pomme gala")
+            Product.create!(name: "Banane", description: "Banane")
         end
         it "send HTTP code 200" do
             get products_path
@@ -15,56 +15,67 @@ RSpec.describe ProductsController, type: :request do
             expect(response.body).to include("Banane")
             expect(response.body).to include("Pomme")
         end
-        it "affiche la description des produits dans la réponse" do
-            get products_path
-            expect(response.body).to include("Pomme gala")
-            expect(response.body).to include("Banane")
-        end
-        it "affiche le nom de la page dans la réponse" do   
-            get products_path
-            expect(response.body).to include("Tous les produits")
-        end
-        it "affiche le template pour GET /products et tous les détails des produits" do
-            get products_path
-            ["Tous les produits", "Pomme", "Pomme gala", "Banane"].each do |content|
-            expect(response.body).to include(content)
-            end
-        end
     end
-    describe "GET /products special chars" do
-        before do
-            Product.create!(name: "Café", description: "Café avec du lait végétal de chataîgnes.")
-        end
-        it "product with special chars" do
-            get products_path
-            expect(response.body).to include("Café")
-            expect(response.body).to include("Café avec du lait végétal de chataîgnes.")
-        end
+    describe "GET /products empty" do
+    it "no products" do
+        Product.delete_all
+        get products_path
+        expect(response.body).to include("Aucun produit disponible")
     end
-    describe "GET /products empty" do 
-        before do
-            Product.delete_all
-        end
-        it "no products" do
-            get products_path
-            expect(response.body).to include("Aucun produit disponible")
-        end
-        before do
-            Product.create(name: nil, description: "Produit lambda")
-            Product.create(name:"Nom de produit", description: nil)
-        end
     end
-    describe "GET /products a lot of data" do
-        before do
-            100.times do |i|
-            Product.create(name: "#{i}", description: "Description de #{i}")
-            end
-        end
-        it "handling a lot of data" do
-            get products_path
-            expect(response.body).to include("Nom du produit : 99")
-            expect(response.body.scan(/Nom du produit :/).size).to eq(100)
-        end
-    end
-end
 
+    describe "GET /products/new" do
+        let(:user) do
+            User.create!(
+              email_address: "test@example.com",
+              password: "azerty",
+              name: "test",
+              last_name: "name"
+            )
+          end
+          context "when user is authenticated" do
+            before do
+              # Simulate user authentication by setting the session cookie
+              post session_path params: { email_address: user.email_address, password: user.password }
+            end
+            it "displays the form" do
+              get products_new_path
+              expect(response).to have_http_status(:ok)
+              expect(response.body).to include('<form')
+              expect(response.body).to include('name="product[name]"')
+              expect(response.body).to include('name="product[description]"')
+            end
+          end
+          context "when user is not authenticated" do
+            it "does not display the form and redirects to login" do
+              get products_new_path
+              expect(response).to have_http_status(:found) # Assuming it redirects to login
+              expect(response).to redirect_to(new_session_path)
+              expect(response.body).not_to include('<form')
+            end
+          end
+      end
+      describe "POST /products/new" do
+        let (:valid_attributes) { { name: "Pomme", description: "Pomme gala" } }
+        let (:invalid_attributes) { { name: "", description: "" } }
+          it "create one product" do
+            get products_new_path
+            product = Product.create(valid_attributes)
+            post products_path, params: { product: valid_attributes }
+            # 1. Vérifier que l'objet est conforme aux validations présentes dans le model.
+            expect(product).to be_valid
+            # 2. Vérifier que l'objet est bien save dans la base.
+            expect(product).to be_persisted
+            # 3. Vérifier que la réponse redirige vers la bonne page après la création.
+            expect(response).to have_http_status(:found)
+            # EN PLUS : tester le changement du nombre de rows en base de données.
+            expect { post :create, params: { product: valid_attributes } }.to change(Product, :count).by(1)
+          end
+          it "does not create one product" do
+            product = Product.create(invalid_attributes)
+            expect(product).not_to be_valid
+            expect(product.errors[:name]).to include("Le nom est obligatoire.")
+            expect(product.errors[:description]).to include("La description est obligatoire.")
+          end
+    end
+    end

@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  get "products", to: "products#index"
+  get "/products", to: "products#index"
+  get "/products/new", to: "products#new"
   resources :users
   resource :session
   resources :passwords, param: :token
-  
   get "pages/home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
