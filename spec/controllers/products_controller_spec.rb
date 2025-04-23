@@ -55,11 +55,23 @@ RSpec.describe ProductsController, type: :request do
             end
           end
       end
-      describe "POST /products/new" do
+      describe "POST /products" do
+        let(:user) do
+          User.create!(
+            email_address: "test@example.com",
+            password: "azerty",
+            name: "test",
+            last_name: "name"
+          )
+        end
+        before do
+          # Simulate user authentication by setting the session cookie
+          post session_path params: { email_address: user.email_address, password: user.password }
+        end
         let (:valid_attributes) { { name: "Pomme", description: "Pomme gala" } }
         let (:invalid_attributes) { { name: "", description: "" } }
           it "create one product" do
-            get products_new_path
+            # get products_new_path
             product = Product.create(valid_attributes)
             post products_path, params: { product: valid_attributes }
             # 1. Vérifier que l'objet est conforme aux validations présentes dans le model.
@@ -69,13 +81,13 @@ RSpec.describe ProductsController, type: :request do
             # 3. Vérifier que la réponse redirige vers la bonne page après la création.
             expect(response).to have_http_status(:found)
             # EN PLUS : tester le changement du nombre de rows en base de données.
-            expect { post :create, params: { product: valid_attributes } }.to change(Product, :count).by(1)
+            expect { post products_path, params: { product: valid_attributes } }.to change(Product, :count).by(1)
           end
           it "does not create one product" do
             product = Product.create(invalid_attributes)
             expect(product).not_to be_valid
-            expect(product.errors[:name]).to include("Le nom est obligatoire.")
-            expect(product.errors[:description]).to include("La description est obligatoire.")
+            expect(product.errors[:name]).to include("Le nom du produit ne peut pas être vide.")
+            expect(product.errors[:description]).to include("La description du produit ne peut pas être vide.")
           end
     end
     end
