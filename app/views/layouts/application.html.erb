@@ -43,6 +43,7 @@
 <% end %>
 <main>
 <%= link_to 'Tous les utilisateurs', users_path if authenticated? %>
+<%= link_to 'Tous les produits', products_path %>
 <%= yield %>
 </main>
   <footer> <%= Date.current.year %> Bio Bloom Market</footer>

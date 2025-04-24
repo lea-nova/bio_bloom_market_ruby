@@ -1,0 +1,40 @@
+<div>
+  <h1 class="font-bold text-4xl">Tous les produits</h1>
+  <b>Products#index</b>
+  <br>
+  <% if @products.empty? %>
+    <p>Aucun produit disponible</p>
+  <% else %>
+    <% @products.each do |product| %>
+      <p>
+        <b>Nom:</b>
+          <% if product.name.present? %>
+            <%= product.name %>
+          <% else %>
+            <em>Pas de nom</em>
+          <% end %>
+        <b>Description:</b>
+          <% if product.description.present? %>
+            <%= product.description %>
+          <% else %>
+            <em>Description indisponible</em>
+          <% end %>
+          <a href="/products/<%= product.id %>">
+         Voir le produit 
+          </a>
+          <a href="/products/<%= product.id %>/edit">
+         Modifier 
+          </a>
+          <%= button_to "Supprimer produit", product_path(product), method: :delete, data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce produit ?"
+          }  %>
+      </p>
+    <% end %>
+    <p class="text-green-400">Tous les produits sont visibles</p>
+  <% end %>
+</div>
+<% if flash[:alert] %>
+  <div class="alert">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+

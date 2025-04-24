@@ -1,0 +1,15 @@
+<% if @product %>
+<% if @product.name.present? %>
+<%= @product.name %>
+<% else %>
+<em>Pas de nom</em>
+<% end %>
+<b>Description:</b>
+<% if @product.description.present? %>
+<%= @product.description %>
+<% else %>
+<em>Description indisponible</em>
+<% end %>
+<% else %>
+<p>Ce produit n'existe pas.</p>
+<% end %>

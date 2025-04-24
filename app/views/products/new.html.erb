@@ -1,0 +1,11 @@
+<% if @product.errors.any? %>
+  <div style="color: red;">
+    <h2>Erreurs :</h2>
+    <ul>
+      <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<%= render "form", product: @product %>
