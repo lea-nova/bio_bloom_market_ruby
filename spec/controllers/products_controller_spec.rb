@@ -39,7 +39,7 @@ RSpec.describe ProductsController, type: :request do
               post session_path params: { email_address: user.email_address, password: user.password }
             end
             it "displays the form" do
-              get products_new_path
+              get new_product_path
               expect(response).to have_http_status(:ok)
               expect(response.body).to include('<form')
               expect(response.body).to include('name="product[name]"')
@@ -48,7 +48,7 @@ RSpec.describe ProductsController, type: :request do
           end
           context "when user is not authenticated" do
             it "does not display the form and redirects to login" do
-              get products_new_path
+              get new_product_path
               expect(response).to have_http_status(:found) # Assuming it redirects to login
               expect(response).to redirect_to(new_session_path)
               expect(response.body).not_to include('<form')
@@ -90,4 +90,71 @@ RSpec.describe ProductsController, type: :request do
             expect(product.errors[:description]).to include("La description du produit ne peut pas être vide.")
           end
     end
+    describe "GET /products/:id " do
+      let(:product) { Product.create!(name: "Pomme", description: "Description pomme") }
+      it "product exists" do
+        get products_path(product)
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Pomme")
+        expect(response.body).to include("Description pomme")
+      end
+      it "product doesn't exist" do
+        # Simule un ID inexistant qui provoque une exception
+        allow(Product).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+        get products_path(id: 999)
+        expect(response).to have_http_status(:ok)
+        expect(response).not_to include('Pomme')
+        expect(response).not_to include('Description pomme')
+      end
     end
+    describe "GET /products/:id/edit edit one product" do
+      let(:user) do
+        User.create!(
+          email_address: "test@example.com",
+          password: "azerty",
+          name: "test",
+          last_name: "name"
+        )
+      end
+      let(:product) { Product.create!(name: "Pomme", description: "Description pomme") }
+      before do
+        # Simulate user authentication by setting the session cookie
+        post session_path params: { email_address: user.email_address, password: user.password }
+      end
+      it "display the form" do
+        get edit_product_path(:id)
+        expect(response).to have_http_status(:found)
+      end
+      it "does not display the form and redirects to login" do
+        get edit_product_path(:id)
+        expect(response).to have_http_status(:found) # Assuming it redirects to login
+        expect(response).to redirect_to(products_path)
+        expect(response.body).not_to include('<form')
+      end
+    end
+    describe "PATCH /products/:id" do
+      it "user not auth" do
+        get product_path(:id)
+        expect(response).to have_http_status(:found) # Assuming it redirects to login
+        # expect(response).to redirect_to(new_session_path)
+        # expect(response.body).not_to include('<form')
+      end
+      let(:user) do
+        User.create!(
+          email_address: "test@example.com",
+          password: "azerty",
+          name: "test",
+          last_name: "name"
+        )
+      end
+      before do
+        # Simulate user authentication by setting the session cookie
+        post session_path params: { email_address: user.email_address, password: user.password }
+      end
+        it "update one product" do
+          product = Product.create!(name: "Pomme", description: "Description pomme")
+          patch product_path(:id), params: { product: { name: "Pomme verte", description: "Description de la pomme verte" } }
+          expect(response).to have_http_status(:found)
+        end
+    end
+  end

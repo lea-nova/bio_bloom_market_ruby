@@ -19,8 +19,22 @@
           <% else %>
             <em>Description indisponible</em>
           <% end %>
+          <a href="/products/<%= product.id %>">
+         Voir le produit 
+          </a>
+          <a href="/products/<%= product.id %>/edit">
+         Modifier 
+          </a>
+          <%= button_to "Supprimer produit", product_path(product), method: :delete, data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer ce produit ?"
+          }  %>
       </p>
     <% end %>
     <p class="text-green-400">Tous les produits sont visibles</p>
   <% end %>
 </div>
+<% if flash[:alert] %>
+  <div class="alert">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
+

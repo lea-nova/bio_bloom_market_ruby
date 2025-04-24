@@ -1,0 +1,7 @@
+<%= form_with model: product, :html => {:class => 'flex flex-col'}, local:true do |form| %>
+<%= form.label :name %>
+<%= form.text_field :name %>
+<%= form.label :description %>
+<%= form.text_field :description %>
+<%= form.submit product.new_record? ? "Créer produit" : "Modifier", class:"border border-2 rounded-lg cursor-pointer w-[10rem]" %>
+<% end %>
