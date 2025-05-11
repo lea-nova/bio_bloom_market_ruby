@@ -28,14 +28,20 @@ class ProductsController < ApplicationController
     if @product.update(product_params)
       redirect_to @product, notice: "Produit mis à jour"
     else
+      flash[:alert]= "Produit introuvable"
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @product = Product.find(params[:id])
-    @product.destroy
-    redirect_to products_path, notice: "Produit supprimé avec succès."
+    if @product.destroy
+      flash[:notice] = "Le produit a été supprimé avec succès."
+      redirect_to products_path
+    else
+      flash[:alert] = "La suppression du produit a échoué."
+      render :show, status: :unprocessable_entity
+    end
   end
 
   private
