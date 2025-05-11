@@ -127,7 +127,7 @@ RSpec.describe ProductsController, type: :request do
       end
       it "does not display the form and redirects to login" do
         get edit_product_path(:id)
-        expect(response).to have_http_status(:found) # Assuming it redirects to login
+        expect(response).to have_http_status(:found)
         expect(response).to redirect_to(products_path)
         expect(response.body).not_to include('<form')
       end
@@ -135,7 +135,7 @@ RSpec.describe ProductsController, type: :request do
     describe "PATCH /products/:id" do
       it "user not auth" do
         get product_path(:id)
-        expect(response).to have_http_status(:found) # Assuming it redirects to login
+        expect(response).to have_http_status(:found)
         # expect(response).to redirect_to(new_session_path)
         # expect(response.body).not_to include('<form')
       end
@@ -156,5 +156,41 @@ RSpec.describe ProductsController, type: :request do
           patch product_path(:id), params: { product: { name: "Pomme verte", description: "Description de la pomme verte" } }
           expect(response).to have_http_status(:found)
         end
+        it "does not update one product" do
+          patch product_path(:id), params: { product: { name: "", description: "" } }
+          expect(response).to redirect_to(products_path)
+          expect(flash[:alert]).to eq("Produit introuvable")
+        end
+    end
+    describe "DELETE /products/:id" do
+      let(:user) do
+        User.create!(
+          email_address: "test@example.com",
+          password: "azerty",
+          name: "test",
+          last_name: "name"
+        )
+      end
+
+      before do
+        post session_path params: { email_address: user.email_address, password: user.password }
+      end
+
+      it "delete one product" do
+        product = Product.create!(name: "Pomme", description: "Description pomme")
+        delete product_path(product)
+        expect(response).to have_http_status(:found)
+        expect(Product.exists?(product.id)).to be_falsey
+        expect(response).to redirect_to(products_path)
+      end
+
+      it "does not delete one product if destroy fails" do
+        product = Product.create!(name: "Pomme", description: "Description pomme")
+        allow_any_instance_of(Product).to receive(:destroy).and_return(false)
+        delete product_path(product)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(Product.exists?(product.id)).to be_truthy
+        expect(flash[:alert]).to eq("La suppression du produit a échoué.")
+      end
     end
   end
