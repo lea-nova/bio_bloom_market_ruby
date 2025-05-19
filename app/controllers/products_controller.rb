@@ -47,7 +47,7 @@ class ProductsController < ApplicationController
   private
   def record_not_found
     flash[:alert] = "Produit introuvable"
-    redirect_to products_path, notice: "Produit introuvable"
+    redirect_to products_path, alert: "Produit introuvable"
   end
 
   private
